@@ -1,692 +1,128 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "This is a sample server Petstore server.  You can find out more about Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).  For this sample, you can use the api key `special-key` to test the authorization filters.",
+    "description": "The Application",
     "version": "1.0.0",
-    "title": "Swagger Petstore",
-    "termsOfService": "http://swagger.io/terms/",
+    "title": "执法办案接口说明",
     "contact": {
-      "email": "apiteam@swagger.io"
+      "name": "users@cxf.apache.org"
     },
     "license": {
-      "name": "Apache 2.0",
+      "name": "Apache 2.0 License",
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     }
   },
-  "host": "http://petstore.swagger.io",
-  "basePath": "/v2",
+  "host":"http://172.0.16.102:9080/WLZFBA-SERVICE",
+  "basePath": "/webservice/rest",
   "tags": [
     {
-      "name": "pet",
-      "description": "Everything about your Pets",
-      "externalDocs": {
-        "description": "Find out more",
-        "url": "http://swagger.io"
-      }
+      "name": "执法办案app接口"
     },
     {
-      "name": "store",
-      "description": "Access to Petstore orders"
+      "name": "接口平台批处理"
     },
     {
-      "name": "user",
-      "description": "Operations about user",
-      "externalDocs": {
-        "description": "Find out more about our store",
-        "url": "http://swagger.io"
-      }
+      "name": "执法办案笔录平台接口"
+    },
+    {
+      "name": "执法办案公共接口"
+    },
+    {
+      "name": "统计接口"
+    },
+    {
+      "name": "涉案财物接口"
+    },
+    {
+      "name": "音视频平台接口"
+    },
+    {
+      "name": "增量数据同步接口"
     }
   ],
-  "schemes": [
-    "http"
-  ],
   "paths": {
-    "/pet": {
+    "/app/getPoliceByJinghao": {
       "post": {
         "tags": [
-          "pet"
+          "执法办案app接口"
         ],
-        "summary": "Add a new pet to the store",
-        "description": "",
-        "operationId": "addPet",
-        "consumes": [
-          "application/json",
-          "application/xml"
-        ],
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
+        "summary": "根据警号密码查询",
+        "description": "根据警号密码查询民警信息",
+        "operationId": "getPoliceByJinghao",
         "parameters": [
           {
-            "in": "body",
-            "name": "body",
-            "description": "Pet object that needs to be added to the store",
+            "name": "jinghao",
+            "in": "formData",
+            "description": "警号",
             "required": true,
-            "schema": {
-              "$ref": "#/definitions/Pet"
-            }
-          }
-        ],
-        "responses": {
-          "405": {
-            "description": "Invalid input"
-          }
-        },
-        "security": [
-          {
-            "petstore_auth": [
-              "write:pets",
-              "read:pets"
-            ]
-          }
-        ]
-      },
-      "put": {
-        "tags": [
-          "pet"
-        ],
-        "summary": "Update an existing pet",
-        "description": "",
-        "operationId": "updatePet",
-        "consumes": [
-          "application/json",
-          "application/xml"
-        ],
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "Pet object that needs to be added to the store",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Pet"
-            }
-          }
-        ],
-        "responses": {
-          "400": {
-            "description": "Invalid ID supplied"
+            "type": "string"
           },
-          "404": {
-            "description": "Pet not found"
-          },
-          "405": {
-            "description": "Validation exception"
-          }
-        },
-        "security": [
           {
-            "petstore_auth": [
-              "write:pets",
-              "read:pets"
-            ]
-          }
-        ]
-      }
-    },
-    "/pet/findByStatus": {
-      "get": {
-        "tags": [
-          "pet"
-        ],
-        "summary": "Finds Pets by status",
-        "description": "Multiple status values can be provided with comma separated strings",
-        "operationId": "findPetsByStatus",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "status",
-            "in": "query",
-            "description": "Status values that need to be considered for filter",
+            "name": "mima",
+            "in": "formData",
+            "description": "密码",
             "required": true,
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": [
-                "available",
-                "pending",
-                "sold"
-              ],
-              "default": "available"
-            },
-            "collectionFormat": "multi"
+            "type": "password"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Pet"
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid status value"
-          }
-        },
-        "security": [
-          {
-            "petstore_auth": [
-              "write:pets",
-              "read:pets"
-            ]
-          }
-        ]
-      }
-    },
-    "/pet/findByTags": {
-      "get": {
-        "tags": [
-          "pet"
-        ],
-        "summary": "Finds Pets by tags",
-        "description": "Muliple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.",
-        "operationId": "findPetsByTags",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "tags",
-            "in": "query",
-            "description": "Tags to filter by",
-            "required": true,
-            "type": "array",
-            "items": {
               "type": "string"
-            },
-            "collectionFormat": "multi"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Pet"
-              }
             }
-          },
-          "400": {
-            "description": "Invalid tag value"
           }
-        },
-        "security": [
-          {
-            "petstore_auth": [
-              "write:pets",
-              "read:pets"
-            ]
-          }
-        ],
-        "deprecated": true
+        }
       }
     },
-    "/pet/{petId}": {
-      "get": {
-        "tags": [
-          "pet"
-        ],
-        "summary": "Find pet by ID",
-        "description": "Returns a single pet",
-        "operationId": "getPetById",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "petId",
-            "in": "path",
-            "description": "ID of pet to return",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/Pet"
-            }
-          },
-          "400": {
-            "description": "Invalid ID supplied"
-          },
-          "404": {
-            "description": "Pet not found"
-          }
-        },
-        "security": [
-          {
-            "api_key": []
-          }
-        ]
-      },
+    "/batch/updateInterfaceBatch": {
       "post": {
         "tags": [
-          "pet"
+          "接口平台批处理"
         ],
-        "summary": "Updates a pet in the store with form data",
-        "description": "",
-        "operationId": "updatePetWithForm",
-        "consumes": [
-          "application/x-www-form-urlencoded"
-        ],
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
+        "summary": "根据警号密码查询",
+        "description": "根据警号密码查询民警信息",
+        "operationId": "updateInterfaceBatch",
         "parameters": [
           {
-            "name": "petId",
-            "in": "path",
-            "description": "ID of pet that needs to be updated",
+            "name": "password",
+            "in": "formData",
+            "description": "password",
             "required": true,
-            "type": "integer",
-            "format": "int64"
+            "type": "string"
+          },
+          {
+            "name": "consumerkey",
+            "in": "formData",
+            "description": "厂家key",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "in": "formData",
+            "description": "接口类型",
+            "required": true,
+            "type": "string"
           },
           {
             "name": "name",
             "in": "formData",
-            "description": "Updated name of the pet",
-            "required": false,
+            "description": "接口名",
+            "required": true,
             "type": "string"
           },
           {
-            "name": "status",
-            "in": "formData",
-            "description": "Updated status of the pet",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "405": {
-            "description": "Invalid input"
-          }
-        },
-        "security": [
-          {
-            "petstore_auth": [
-              "write:pets",
-              "read:pets"
-            ]
-          }
-        ]
-      },
-      "delete": {
-        "tags": [
-          "pet"
-        ],
-        "summary": "Deletes a pet",
-        "description": "",
-        "operationId": "deletePet",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "api_key",
+            "name": "key",
             "in": "header",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "petId",
-            "in": "path",
-            "description": "Pet id to delete",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "400": {
-            "description": "Invalid ID supplied"
-          },
-          "404": {
-            "description": "Pet not found"
-          }
-        },
-        "security": [
-          {
-            "petstore_auth": [
-              "write:pets",
-              "read:pets"
-            ]
-          }
-        ]
-      }
-    },
-    "/pet/{petId}/uploadImage": {
-      "post": {
-        "tags": [
-          "pet"
-        ],
-        "summary": "uploads an image",
-        "description": "",
-        "operationId": "uploadFile",
-        "consumes": [
-          "multipart/form-data"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "petId",
-            "in": "path",
-            "description": "ID of pet to update",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "additionalMetadata",
-            "in": "formData",
-            "description": "Additional data to pass to server",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "file",
-            "in": "formData",
-            "description": "file to upload",
-            "required": false,
-            "type": "file"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse"
-            }
-          }
-        },
-        "security": [
-          {
-            "petstore_auth": [
-              "write:pets",
-              "read:pets"
-            ]
-          }
-        ]
-      }
-    },
-    "/store/inventory": {
-      "get": {
-        "tags": [
-          "store"
-        ],
-        "summary": "Returns pet inventories by status",
-        "description": "Returns a map of status codes to quantities",
-        "operationId": "getInventory",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "object",
-              "additionalProperties": {
-                "type": "integer",
-                "format": "int32"
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "api_key": []
-          }
-        ]
-      }
-    },
-    "/store/order": {
-      "post": {
-        "tags": [
-          "store"
-        ],
-        "summary": "Place an order for a pet",
-        "description": "",
-        "operationId": "placeOrder",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "order placed for purchasing the pet",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Order"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/Order"
-            }
-          },
-          "400": {
-            "description": "Invalid Order"
-          }
-        }
-      }
-    },
-    "/store/order/{orderId}": {
-      "get": {
-        "tags": [
-          "store"
-        ],
-        "summary": "Find purchase order by ID",
-        "description": "For valid response try integer IDs with value >= 1 and <= 10. Other values will generated exceptions",
-        "operationId": "getOrderById",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "path",
-            "description": "ID of pet that needs to be fetched",
-            "required": true,
-            "type": "integer",
-            "maximum": 10.0,
-            "minimum": 1.0,
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/Order"
-            }
-          },
-          "400": {
-            "description": "Invalid ID supplied"
-          },
-          "404": {
-            "description": "Order not found"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "store"
-        ],
-        "summary": "Delete purchase order by ID",
-        "description": "For valid response try integer IDs with positive integer value. Negative or non-integer values will generate API errors",
-        "operationId": "deleteOrder",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "path",
-            "description": "ID of the order that needs to be deleted",
-            "required": true,
-            "type": "integer",
-            "minimum": 1.0,
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "400": {
-            "description": "Invalid ID supplied"
-          },
-          "404": {
-            "description": "Order not found"
-          }
-        }
-      }
-    },
-    "/user": {
-      "post": {
-        "tags": [
-          "user"
-        ],
-        "summary": "Create user",
-        "description": "This can only be done by the logged in user.",
-        "operationId": "createUser",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "Created user object",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": "successful operation"
-          }
-        }
-      }
-    },
-    "/user/createWithArray": {
-      "post": {
-        "tags": [
-          "user"
-        ],
-        "summary": "Creates list of users with given input array",
-        "description": "",
-        "operationId": "createUsersWithArrayInput",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "List of user object",
-            "required": true,
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/User"
-              }
-            }
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": "successful operation"
-          }
-        }
-      }
-    },
-    "/user/createWithList": {
-      "post": {
-        "tags": [
-          "user"
-        ],
-        "summary": "Creates list of users with given input array",
-        "description": "",
-        "operationId": "createUsersWithListInput",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "List of user object",
-            "required": true,
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/User"
-              }
-            }
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": "successful operation"
-          }
-        }
-      }
-    },
-    "/user/login": {
-      "get": {
-        "tags": [
-          "user"
-        ],
-        "summary": "Logs user into the system",
-        "description": "",
-        "operationId": "loginUser",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "username",
-            "in": "query",
-            "description": "The user name for login",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "password",
-            "in": "query",
-            "description": "The password for login in clear text",
+            "description": "Authorization token",
             "required": true,
             "type": "string"
           }
@@ -696,63 +132,38 @@
             "description": "successful operation",
             "schema": {
               "type": "string"
-            },
-            "headers": {
-              "X-Rate-Limit": {
-                "type": "integer",
-                "format": "int32",
-                "description": "calls per hour allowed by the user"
-              },
-              "X-Expires-After": {
-                "type": "string",
-                "format": "date-time",
-                "description": "date in UTC when token expires"
-              }
             }
-          },
-          "400": {
-            "description": "Invalid username/password supplied"
           }
         }
       }
     },
-    "/user/logout": {
-      "get": {
+    "/bl/getPoliceByJinghao": {
+      "post": {
         "tags": [
-          "user"
+          "执法办案笔录平台接口"
         ],
-        "summary": "Logs out current logged in user session",
-        "description": "",
-        "operationId": "logoutUser",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [],
-        "responses": {
-          "default": {
-            "description": "successful operation"
-          }
-        }
-      }
-    },
-    "/user/{username}": {
-      "get": {
-        "tags": [
-          "user"
-        ],
-        "summary": "Get user by user name",
-        "description": "",
-        "operationId": "getUserByName",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
+        "summary": "根据警号密码查询",
+        "description": "根据警号密码查询民警信息",
+        "operationId": "getPoliceByJinghao_1",
         "parameters": [
           {
-            "name": "username",
-            "in": "path",
-            "description": "The name that needs to be fetched. Use user1 for testing. ",
+            "name": "jinghao",
+            "in": "formData",
+            "description": "警号",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "mima",
+            "in": "formData",
+            "description": "密码",
+            "required": true,
+            "type": "password"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
             "required": true,
             "type": "string"
           }
@@ -761,275 +172,2870 @@
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/User"
+              "type": "string"
             }
-          },
-          "400": {
-            "description": "Invalid username supplied"
-          },
-          "404": {
-            "description": "User not found"
           }
         }
-      },
-      "put": {
+      }
+    },
+    "/common/getRoles": {
+      "get": {
         "tags": [
-          "user"
+          "执法办案公共接口"
         ],
-        "summary": "Updated user",
-        "description": "This can only be done by the logged in user.",
-        "operationId": "updateUser",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
+        "summary": "获取角色数据",
+        "description": "返回结果类型说明:</br>1.datas\t案件数据\tList</br>\n2.success\t返回结果状态，true：成功，false：失败\tInteger</br>\n3.msg\t返回异常信息\tString</br>\n1.id\t角色id\tString</br>\n2.name\t角色名称\tString</br>\n3.actflag\t数据标志（actflag=1新增2修改4删除）\tString</br>",
+        "operationId": "getRoles",
         "parameters": [
           {
-            "name": "username",
-            "in": "path",
-            "description": "name that need to be updated",
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
             "required": true,
             "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "description": "Updated user object",
-            "required": true,
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/User"
+              "type": "string"
             }
           }
-        ],
-        "responses": {
-          "400": {
-            "description": "Invalid user supplied"
-          },
-          "404": {
-            "description": "User not found"
-          }
         }
-      },
-      "delete": {
+      }
+    },
+    "/common/getZfqyRyGlAj": {
+      "post": {
         "tags": [
-          "user"
+          "执法办案公共接口"
         ],
-        "summary": "Delete user",
-        "description": "This can only be done by the logged in user.",
-        "operationId": "deleteUser",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
+        "summary": "执法区域人员关联案件信息",
+        "description": " 返回数据字段说明</br>    acttime 变动时间,                                </br>\n    actflag 1表示新增记录2表示修改记录4表示删除记录, </br>\n    anjianbianhao 关联上的案件编号</br>    renyuanbianhao 执法场所人员编号",
+        "operationId": "getZfqyRyGlAj",
         "parameters": [
           {
-            "name": "username",
-            "in": "path",
-            "description": "The name that needs to be deleted",
+            "name": "acttime",
+            "in": "formData",
+            "description": "数据变动时间,yyyy-MM-dd hh24:mi:ss 格式如2011-01-01 00:00:00",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endTime",
+            "in": "formData",
+            "description": "结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "orgId",
+            "in": "formData",
+            "description": "办案单位编号 ， (12位办案单位编号)",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "rybh",
+            "in": "formData",
+            "description": "按人员编号查询 Y1302021200002017080001",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
             "required": true,
             "type": "string"
           }
         ],
         "responses": {
-          "400": {
-            "description": "Invalid username supplied"
-          },
-          "404": {
-            "description": "User not found"
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
           }
         }
       }
-    }
-  },
-  "securityDefinitions": {
-    "petstore_auth": {
-      "type": "oauth2",
-      "authorizationUrl": "http://petstore.swagger.io/oauth/dialog",
-      "flow": "implicit",
-      "scopes": {
-        "write:pets": "modify pets in your account",
-        "read:pets": "read your pets"
-      }
     },
-    "api_key": {
-      "type": "apiKey",
-      "name": "api_key",
-      "in": "header"
-    }
-  },
-  "definitions": {
-    "Order": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "petId": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "quantity": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "shipDate": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "status": {
-          "type": "string",
-          "description": "Order Status",
-          "enum": [
-            "placed",
-            "approved",
-            "delivered"
-          ]
-        },
-        "complete": {
-          "type": "boolean",
-          "default": false
-        }
-      },
-      "xml": {
-        "name": "Order"
-      }
-    },
-    "User": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "username": {
-          "type": "string"
-        },
-        "firstName": {
-          "type": "string"
-        },
-        "lastName": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
-        },
-        "phone": {
-          "type": "string"
-        },
-        "userStatus": {
-          "type": "integer",
-          "format": "int32",
-          "description": "User Status"
-        }
-      },
-      "xml": {
-        "name": "User"
-      }
-    },
-    "Category": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "name": {
-          "type": "string"
-        }
-      },
-      "xml": {
-        "name": "Category"
-      }
-    },
-    "Tag": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "name": {
-          "type": "string"
-        }
-      },
-      "xml": {
-        "name": "Tag"
-      }
-    },
-    "Pet": {
-      "type": "object",
-      "required": [
-        "name",
-        "photoUrls"
-      ],
-      "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "category": {
-          "$ref": "#/definitions/Category"
-        },
-        "name": {
-          "type": "string",
-          "example": "doggie"
-        },
-        "photoUrls": {
-          "type": "array",
-          "xml": {
-            "name": "photoUrl",
-            "wrapped": true
+    "/common/getJjcjToAnjians": {
+      "post": {
+        "tags": [
+          "执法办案公共接口"
+        ],
+        "summary": "获取接警转案件",
+        "description": "返回结果说明</br>1.data\t执法区域人员信息\tObject</br>\n2.flag\t返回结果状态，1：成功，0：失败\tInteger</br>\n3.error\t返回异常信息\tString</br>\n1.banandanweiid\t办案单位编号\tString</br>\n2.jiejingdanweiid\t接警单位编号\tString</br>\n3.bianhao\t接警编号\tInt</br>\n4.anjianbianhao\t案件编号\t</br>",
+        "operationId": "getJjcjToAnjians",
+        "parameters": [
+          {
+            "name": "gonganid",
+            "in": "formData",
+            "description": "公安id ，6位编号",
+            "required": true,
+            "type": "string"
           },
-          "items": {
+          {
+            "name": "orgId",
+            "in": "formData",
+            "description": "办案单位编号 ，12位编号",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "startDate",
+            "in": "formData",
+            "description": "开始时间",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "in": "formData",
+            "description": "结束时间",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
             "type": "string"
           }
-        },
-        "tags": {
-          "type": "array",
-          "xml": {
-            "name": "tag",
-            "wrapped": true
-          },
-          "items": {
-            "$ref": "#/definitions/Tag"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
           }
-        },
-        "status": {
-          "type": "string",
-          "description": "pet status in the store",
-          "enum": [
-            "available",
-            "pending",
-            "sold"
-          ]
         }
-      },
-      "xml": {
-        "name": "Pet"
       }
     },
-    "ApiResponse": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "type": {
-          "type": "string"
-        },
-        "message": {
-          "type": "string"
+    "/common/getZfqySuspects": {
+      "post": {
+        "tags": [
+          "执法办案公共接口"
+        ],
+        "summary": "获取嫌疑人数据",
+        "description": "返回参数说明</br>1. datas\t执法区域人员信息\tList  </br>  2. success\t返回结果状态，1：成功，0：失败\tBoolean </br>3. msg\t返回异常信息\tString                    </br>                                                     1. Id\t编号\tString                              </br>2. acttime\t录入时间\tString                     </br> 3. actflag\t数据标志,1新增2修改4删除\tString     </br> 4. gonganbianhao\t单位编号\tString             </br> 5. banandanweiid\t单位id，单位的12位编码\tString  </br>6. bananren1id\t办案人id\tString                 </br> 7. anjianbianhao\t案件编号\tString            </br>  8. anjianmingcheng\t案件名称\tString              </br>9. anjianleibie\t案件类别\tString             </br> 10. renyuanbianhao\t人员编号\tString            </br>  11. xingming\t嫌疑人姓名\tString                </br>  12. xingbie\t嫌疑人性别\tString                 </br> 13. anjianleibiedm\t案件类别代码\tString         </br> 14. jinrushijian\t进入时间\tString             </br> 15. likaishijian\t离开时间\tString             </br> 16. changsuoid\t场所id\tString                     </br> 17. changsuomc\t场所名称\tString                 </br> 18. banandanweimc\t办案单位名称\tString         </br> 19. bananren1xm\t办案人1\tString                  </br>",
+        "operationId": "getZfqySuspects",
+        "parameters": [
+          {
+            "name": "rybh",
+            "in": "formData",
+            "description": "人员编号",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "gonganid",
+            "in": "formData",
+            "description": "(6位公安id)（非必传）",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "orgId",
+            "in": "formData",
+            "description": "办案单位编号 ， (12位办案单位编号)",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "zfbaId",
+            "in": "formData",
+            "description": "执法区域嫌疑人相关信息唯一标识。",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "code",
+            "in": "formData",
+            "description": "案件编号或接处警编号，可空",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "formData",
+            "description": "案件名称，可空",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "policeCode",
+            "in": "formData",
+            "description": "查询案件的人员的警号，可能为空",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "suspectName",
+            "in": "formData",
+            "description": "姓名，可空",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "startDate",
+            "in": "formData",
+            "description": "接处警开始时间,可空",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "in": "formData",
+            "description": "接处警结束时间，可空",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/common/getCases": {
+      "post": {
+        "tags": [
+          "执法办案公共接口"
+        ],
+        "summary": "获取案件数据",
+        "description": "1.datas\t案件数据\tList</br>\n2.success\t返回结果状态，true：成功，false：失败\tInteger</br>\n3.msg\t返回异常信息\tString</br>\n1.gonganbianhao\t公安编号（组织机构编号）\tString</br>\n2.anjianbianhao\t案件编号\tString</br>\n3.anjianmingcheng\t案件名称\tString</br>\n4.anjianleibie\t案件类别\tString</br>\n5.banandanweiId\t办案单位编号\tString</br>\n6.bananrenyuan1Id\t办案民警1编号\tString</br>\n7.Bananrenyuan2Id\t办案民警2编号\tString</br>\n8.shouliriqi\t办案民警1编号\tString</br>\n9.lianriqi\t办案民警2编号\tString</br>\n10.jianyaoanqing\t简要案情\tString</br>\n11.anjianbiaozhi\t案件标志（1:刑事案件2：行政案件）\tString</br>12.jiejingid 接警表id\n\n",
+        "operationId": "getCases",
+        "parameters": [
+          {
+            "name": "gonganid",
+            "in": "formData",
+            "description": "6位公安id",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "orgId",
+            "in": "formData",
+            "description": "办案单位编号 ， (12位办案单位编号)",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "jinghao",
+            "in": "formData",
+            "description": "查询案件的人员的警号",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "casecode",
+            "in": "formData",
+            "description": "案件编码",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "anjianbiaozhi",
+            "in": "formData",
+            "description": "1刑事案件2行政案件",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "shouliriq_start",
+            "in": "formData",
+            "description": "开始时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "shouliriq_end",
+            "in": "formData",
+            "description": "开始时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "lianriqi_start",
+            "in": "formData",
+            "description": "结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "lianriqi_end",
+            "in": "formData",
+            "description": "结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "startDate",
+            "in": "formData",
+            "description": "记录修改结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "in": "formData",
+            "description": "记录修改开始时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "actflag",
+            "in": "formData",
+            "description": "1新增2修改4删除",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/common/getJcjxxs": {
+      "post": {
+        "tags": [
+          "执法办案公共接口"
+        ],
+        "summary": "获取接处警数据",
+        "description": "返回结果说明：</br>1.datas\t案件数据\tList</br>\n2.success\t返回结果状态，true：成功，false：失败\tInteger</br>\n3.msg\t返回异常信息\tString</br>\n1.bianhao\t接警编号\tString</br>\n2.gonganbianhao\t公安编号（组织机构编号）\tString</br>\n3.banandanwei\t办案单位\tString</br>\n4.jiejingdanweiId\t接警单位\tString</br>\n5.jiejingdanweimc\t接警单位名称\tString</br>\n6.jingqingmingcheng\t警情名称\tString</br>\n7.faxiandidian\t发现地点\tShort</br>\n8.bananrenyuan1Id\t办案民警1编号\tString</br>\n9.bananrenyuan2Id\t办案民警2编号\tDate</br>\n10.baoanshijian\t报案时间\tString</br>\n11.chujingshijian\t处警时间\tString</br>\n12.chujingren1Id\t处警人编号\tString</br>\n13.chujingren2Id\t处警人编号\tString</br>\n14.anjianxingzhi\t案件性质（立案后有值）\t</br>\n15.id 接处警表的id\n\n",
+        "operationId": "getJcjxxs",
+        "parameters": [
+          {
+            "name": "gonganid",
+            "in": "formData",
+            "description": "6位公安id",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "orgId",
+            "in": "formData",
+            "description": "办案单位编号 ， (12位办案单位编号)",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "jinghao",
+            "in": "formData",
+            "description": "查询案件的人员的警号",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "casecode",
+            "in": "formData",
+            "description": "案件编码",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "jjcjcode",
+            "in": "formData",
+            "description": "接处警编号",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "startDate",
+            "in": "formData",
+            "description": "开始时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "in": "formData",
+            "description": "结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "actflag",
+            "in": "formData",
+            "description": "1新增2修改4删除",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/common/getJcjxxCount": {
+      "post": {
+        "tags": [
+          "执法办案公共接口"
+        ],
+        "summary": "获取指定执法单位的接处警总量",
+        "description": "返回结果说明：</br>1.data\t执法区域人员信息\tObject</br>\n2.flag\t返回结果状态，1：成功，0：失败\tInteger</br>\n3.error\t返回异常信息\tString</br>1.orgid\t组织机构编码\tString</br>\n2.orgName\t组织机构名称\tString</br>\n3.count\t统计总数\tInt</br>\n",
+        "operationId": "getJcjxxCount",
+        "parameters": [
+          {
+            "name": "gonganid",
+            "in": "formData",
+            "description": "办案单位编号 ，不能为空 (6位公安编号)（必传）",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "startTime",
+            "in": "formData",
+            "description": "开始时间（必传）",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "endTime",
+            "in": "formData",
+            "description": "结束时间（必传）",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/common/getCaseCount": {
+      "post": {
+        "tags": [
+          "执法办案公共接口"
+        ],
+        "summary": "获取指定执法单位案件总量",
+        "description": "返回结果说明：</br>1.data\t执法区域人员信息\tObject</br>\n2.flag\t返回结果状态，1：成功，0：失败\tInteger</br>\n3.error\t返回异常信息\tString</br>1.orgid\t组织机构编码\tString</br>\n2.orgName\t组织机构名称\tString</br>\n3.count\t统计总数\tInt</br>",
+        "operationId": "getCaseCount",
+        "parameters": [
+          {
+            "name": "gonganid",
+            "in": "formData",
+            "description": "办案单位编号 ，不能为空 (6位公安编号)（必传）",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "startTime",
+            "in": "formData",
+            "description": "开始时间（必传）",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "endTime",
+            "in": "formData",
+            "description": "结束时间（必传）",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/common/getOrgList": {
+      "get": {
+        "tags": [
+          "执法办案公共接口"
+        ],
+        "summary": "获取组织机构数据",
+        "description": "返回结果类型说明:</br>1.datas\t案件数据\tList</br>\n2.success\t返回结果状态，true：成功，false：失败\tInteger</br>\n3.msg\t返回异常信息\tString</br>\n1.id\t组织机构id\tString</br>\n2.mingcheng\t组织机构名称\tString</br>\n3.parentId\t组织机构上下级\tString</br>\n4.actflag\t数据标志（actflag=1新增2修改4删除）</br>",
+        "operationId": "getOrgList",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/common/updateAddVideos": {
+      "post": {
+        "tags": [
+          "执法办案公共接口"
+        ],
+        "summary": "回写执法办案数据",
+        "description": "[{\n\t\"actflag\": \"1\", \n\t\"leibie\": \"3\",//(0警情视频1案件视频2轨迹视频3审讯视频)\n\"ajbh\": \"A1303004500002016070024\",\n\t\"fushuleibie\": \"3\"\n“ziliaomingcheng”：”测试”,\n“guijikstime”：” 2015-02-02 11:22:20(或者20150202122220)”,\n“guijijstime”：” 2015-02-02 12:22:20(或者20150202122220)”,\n“bilubianhao”：” B1303004500002016070024”,\n“beixunwenren”：”张三”,\n“xunwencishu”：”1”,\n“biluleibie”：”00”,\n“playurl”：”http://10.27.86.22:8080/kms/services/rest/dataInfoService/downloadFile?id=9824ae52aa9a4112b36b0c161f223798&token=0d65c57effffffff4c34a16891f84e7b”,\n“gonganjiguan”：”130300”,\n“banandanwei”：” 130300450000”,\n“bananrenyuan”：” 130300450000”\n\"kid\":\"93d8b39322114ddd930b287cdd05a729\"},{\n\t\"actflag\": \"1\", \n\t\"leibie\": \"3\",\n\"ajbh\": \"A1303004500002016070024\",\n\t\"fushuleibie\": \"3\"\n“ziliaomingcheng”：”测试”,\n“guijikstime”：” 2015-02-02 11:22:20(或者20150202122220)”,\n“guijijstime”：” 2015-02-02 12:22:20(或者20150202122220)”,\n“bilubianhao”：” B1303004500002016070024”,\n“beixunwenren”：”张三”,\n“xunwencishu”：”1”,\n“biluleibie”：”00”,\n“playurl”：”http://10.27.86.22:8080/kms/services/rest/dataInfoService/downloadFile?id=9824ae52aa9a4112b36b0c161f223798&token=0d65c57effffffff4c34a16891f84e7b”,\n“gonganjiguan”：”130300”,\n“banandanwei”：” 130300450000”,\n“bananrenyuan”：” 130300450000”\n\"kid\":\"93d8b39322114ddd930b287cdd05a729\"}]\n</br>请求参数说明\n</br>1.actflag\t数据标志,1新增2修改4删除\tInteger </br>\n2.Leibie\t类别 0是接警 ajbh 字段 回写 接警id  如：DC9F43CF9437261D10927613C00D98B7  1 是案件 ajbh 字段 回写 A 开头的案件编号 如：A1302001300002018010022   2 执法场所人员轨迹  ajbh 字段 回写 Y开头的人员编号 如：Y1302021100002017070001     3是笔录  ajbh 字段 回写 Y开头的人员编号 如：Y1302021100002017070001     4是签字特写  ajbh 字段 回写 Y开头的人员编号 如：Y1302021100002017070001     5是押解  ajbh 字段 回写 Y开头的人员编号 如：Y1302021100002017070001     6是监管  ajbh 字段 回写 Y开头的人员编号 如：Y1302021100002017070001     7 涉案财物视频 ajbh 字段串 A 开头的案件编号如：A1302001300002018010022 \tString</br>\n3.ajbh\t案件编号、接警ID、或者执法场所人员编号\tString</br>\n4.fushuleibie\t轨迹类别(0楼道 1 信息采集2辨认3询问,4讯问，，9其他）或文书类别（预留）\tString</br>\n5.ziliaomingcheng\t资料名称\tString</br>\n6.guijikstime\t轨迹开始时间\tDate,精确到时分秒</br>\n7.guijijstime\t轨迹结束时间\tDate,精确到时分秒</br>\n8.bilubianhao\t笔录编号，和笔录相关的需要填写\tString</br>\n9.beixunwenren\t被询问人\tString</br>\n1.0xunwencishu\t询问次数\tString</br>\n1.1biluleibie\t笔录类别\tString</br>\n1.2(必传)playurl\t视频播放地址\tString</br>\n1.3(必传)gonganjiguan\t公安机关：①轨迹时表示执法场所所属公安机关，和办案人无关，② 手动上传视频，表示办案单位所属的公安机关\tString</br>\n1.4(必传)banandanwei\t公安机关：①轨迹时表示执法场所ID，② 手动上传视频，表示办案单位\tString</br>\n1.5bananrenyuan\t办案人员：①轨迹时可留空，② 手动上传视频，表示上传人ID\tString</br>\n1.6Kid\t每条数据的唯一表示，插入时返回kid和执法办案库id，（需调用方自行将kid更新为id）。更新/删除时，将actflag 置为2/4,\tString</br>1.7(必传)comflag\t作为初始数据公司标志1执法2科达 3 304所  4川谷 5启奥  10诺斯    11东方网力, 12 金秋佳讯\tString</br>1.8actuser\t上传人,\tString</br>返回结果示例如下：</br>{\"success\":true,\n\"datas\":[“A1303004500002016070024”,” A1303004500002016070025”],\n\"msg\":”数据回写成功！|数据回写失败！”\n}\n</br>返回结果说明：</br>1.datas\t数据回写成功返回\tList</br>\n2.success\t返回结果状态，true：成功，false：失败\tBoolean</br>\n3.msg\t返回异常信息,成功时返回写入数据的案件编号及回写成功信息。\tString</br>",
+        "operationId": "updateAddVideos",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "data",
+            "in": "formData",
+            "description": "回写执法办案系统数据（json）",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/common/getDictionaries": {
+      "post": {
+        "tags": [
+          "执法办案公共接口"
+        ],
+        "summary": "获取字典数据",
+        "description": "返回结果说明:</br>1.datas\t案件数据\tList</br>\n2.success\t返回结果状态，true：成功，false：失败\tInteger</br>\n3.msg\t返回异常信息\tString</br>\n1.zidianbianhao\t字典类型编码\tString</br>\n2.zidianmingcheng\t字典类型描述\tString</br>\n3.actflag\t数据标志（actflag=1新增2修改4删除）\tString</br>\n\n",
+        "operationId": "getDictionaries",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "formData",
+            "description": "传入字典类型。（1证件类型、2国籍、3性别、4案件分类、5案件状态、6民族、7旅客证件类型</br>涉案财物相关：S1物品种类、S2 物品类型 、S3物品性质、S4数量单位、S5重量单位、S6颜色、S7物品处理措施、S8号牌种类代码、S9现金、S10 涉案物品轨迹）",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/common/getJyxxByjh": {
+      "post": {
+        "tags": [
+          "执法办案公共接口"
+        ],
+        "summary": "根据警号查询警员信息",
+        "description": "警员信息",
+        "operationId": "getJyxxByjh",
+        "parameters": [
+          {
+            "name": "jinghao",
+            "in": "formData",
+            "description": "警员警号",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/common/getJcjxxsTb": {
+      "post": {
+        "tags": [
+          "执法办案公共接口"
+        ],
+        "summary": "接警数据同步",
+        "description": "返回结果说明：</br>1.datas\t案件数据\tList</br>\n2.success\t返回结果状态，true：成功，false：失败\tInteger</br>\n3.msg\t返回异常信息\tString</br>\n1.bianhao\t接警编号\tString</br>\n2.gonganbianhao\t公安编号（组织机构编号）\tString</br>\n3.banandanwei\t办案单位\tString</br>\n4.jiejingdanweiId\t接警单位\tString</br>\n5.jiejingdanweimc\t接警单位名称\tString</br>\n6.jingqingmingcheng\t警情名称\tString</br>\n7.faxiandidian\t发现地点\tShort</br>\n8.bananrenyuan1Id\t办案民警1编号\tString</br>\n9.bananrenyuan2Id\t办案民警2编号\tDate</br>\n10.baoanshijian\t报案时间\tString</br>\n11.chujingshijian\t处警时间\tString</br>\n12.chujingren1Id\t处警人编号\tString</br>\n13.chujingren2Id\t处警人编号\tString</br>\n14.anjianxingzhi\t案件性质（立案后有值）\t</br>\n15.id 接处警表的id\n\n",
+        "operationId": "getJcjxxsTb",
+        "parameters": [
+          {
+            "name": "gonganid",
+            "in": "formData",
+            "description": "6位公安id",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "orgId",
+            "in": "formData",
+            "description": "办案单位编号 ， (12位办案单位编号)",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "jinghao",
+            "in": "formData",
+            "description": "查询案件的人员的警号",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "casecode",
+            "in": "formData",
+            "description": "案件编码",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "jjcjcode",
+            "in": "formData",
+            "description": "接处警编号",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "startDate",
+            "in": "formData",
+            "description": "开始时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "in": "formData",
+            "description": "结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "actflag",
+            "in": "formData",
+            "description": "1新增2修改4删除",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/common/getCasesTb": {
+      "post": {
+        "tags": [
+          "执法办案公共接口"
+        ],
+        "summary": "案件数据同步",
+        "description": "1.datas\t案件数据\tList</br>\n2.success\t返回结果状态，true：成功，false：失败\tInteger</br>\n3.msg\t返回异常信息\tString</br>\n1.gonganbianhao\t公安编号（组织机构编号）\tString</br>\n2.anjianbianhao\t案件编号\tString</br>\n3.anjianmingcheng\t案件名称\tString</br>\n4.anjianleibie\t案件类别\tString</br>\n5.banandanweiId\t办案单位编号\tString</br>\n6.bananrenyuan1Id\t办案民警1编号\tString</br>\n7.Bananrenyuan2Id\t办案民警2编号\tString</br>\n8.shouliriqi\t办案民警1编号\tString</br>\n9.lianriqi\t办案民警2编号\tString</br>\n10.jianyaoanqing\t简要案情\tString</br>\n11.anjianbiaozhi\t案件标志（1:刑事案件2：行政案件）\tString</br>\n12.jiejingid 接警表id\n\n",
+        "operationId": "getCasesTb",
+        "parameters": [
+          {
+            "name": "gonganid",
+            "in": "formData",
+            "description": "6位公安id",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "orgId",
+            "in": "formData",
+            "description": "办案单位编号 ， (12位办案单位编号)",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "jinghao",
+            "in": "formData",
+            "description": "查询案件的人员的警号",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "casecode",
+            "in": "formData",
+            "description": "案件编码",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "anjianbiaozhi",
+            "in": "formData",
+            "description": "1刑事案件2行政案件",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "shouliriq_start",
+            "in": "formData",
+            "description": "开始时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "shouliriq_end",
+            "in": "formData",
+            "description": "开始时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "lianriqi_start",
+            "in": "formData",
+            "description": "结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "lianriqi_end",
+            "in": "formData",
+            "description": "结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "startDate",
+            "in": "formData",
+            "description": "记录修改结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "in": "formData",
+            "description": "记录修改开始时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "actflag",
+            "in": "formData",
+            "description": "1新增2修改4删除",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/common/getPoliceByJinghao": {
+      "post": {
+        "tags": [
+          "执法办案公共接口"
+        ],
+        "summary": "根据警号密码查询",
+        "description": "根据警号密码查询民警信息",
+        "operationId": "getPoliceByJinghao_2",
+        "parameters": [
+          {
+            "name": "jinghao",
+            "in": "formData",
+            "description": "警号",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "mima",
+            "in": "formData",
+            "description": "密码",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/common/getPersonalsAndRoles": {
+      "post": {
+        "tags": [
+          "执法办案公共接口"
+        ],
+        "summary": "获取人员、人员角色数据",
+        "description": "1.datas\t案件数据\tList</br>\n2.success\t返回结果状态，true：成功，false：失败\tInteger</br>\n3.msg\t返回异常信息\tString</br>\n1.id\t人员编号id\tString</br>\n2.actflag\t数据标志（actflag=1新增2修改4删除）\tString</br>\n3.gonganid\t公安编号组织机构\tString</br>\n4.banandanweiid\t办案单位\tString</br>\n5.jinghao\t警号\tString</br>\n6.xingming\t民警姓名\tString</br>\n7.mima\t密码\tString</br>\n8.Jiaose\t民警角色\tString</br>",
+        "operationId": "getPersonalsAndRoles",
+        "parameters": [
+          {
+            "name": "actflag",
+            "in": "formData",
+            "description": "数据标志；（数据标志：actflag=1新增2修改4删除）",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "startDate",
+            "in": "formData",
+            "description": "数据变更的开始时间",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "in": "formData",
+            "description": "数据变更的结束时间",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "gonganid",
+            "in": "formData",
+            "description": "(6位公安id)（非必传）",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "orgId",
+            "in": "formData",
+            "description": "办案单位编号 ， (12位办案单位编号)",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/common/getDepartmentList": {
+      "get": {
+        "tags": [
+          "执法办案公共接口"
+        ],
+        "summary": "获取办案单位",
+        "description": "1.datas\t案件数据\tList</br>\n2.success\t返回结果状态，true：成功，false：失败\tInteger</br>\n3.msg\t返回异常信息\tString</br>\n1.id\t办案单位id\tString</br>\n2.mingcheng\t单位名称\tString</br>\n3.quancheng\t隶属全称\tString</br>\n4.gonganid\t组织机构编号\tString</br>\n5.actflag\t数据标志（actflag=1新增2修改4删除）\tString</br>",
+        "operationId": "getDepartmentList",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/common/queryForWriteBlVideo": {
+      "post": {
+        "tags": [
+          "执法办案公共接口"
+        ],
+        "summary": "获取审讯视频（笔录）视频数据",
+        "description": "注：参数可以穿笔录编号 或者返回结果说明：</br>1.data\t执法区域人员信息\tObject</br>\n2.flag\t返回结果状态，1：成功，0：失败\tInteger</br>\n3.error\t返回异常信息\tString</br>1.orgId\t组织机构编码\tString           </br>\n2.orgName\t组织机构名称\tString       </br>\n3.riqi\t日期\tdate                     </br>\n4.time\t\tString                       </br>\n5.anjianbianhao\t案件编号\tString       </br>\n6.gonganbianhao\t组织架构id?\tString       </br>\n7.bananren1id\t办案1 警号\tString       </br>\n8.bananren2id\t办案2 警号\tString       </br>\n9.bananren1xm\t办案人1姓名\tString       </br>\n10.bananren2xm\t办案人2姓名\tString       </br>\n11.beixunwenren\t被询问人姓名\tString   </br>\n12.xunwencishu\t询问次数\tinteger      </br>\n13.biluleibie\t笔录类别\tString       </br>\n14.qishishijian\t起始时间\tDatetime     </br>\n15.zhongzhishijian\t终止时间\tDatetime </br>\n16.bilubianhao\t笔录编号\tString       </br>\n17.domainid\t\tString                   </br>\n18.name\t\tString                       </br>\n19.uname\t用户名\tString               </br>\n20.upass\t密码\tString               </br>\n21.devm\t\tString                       </br>\n22.devip\t设备id地址\tString           </br>\n23.puid\t\tString                       </br>\n",
+        "operationId": "queryForWriteBlVideo",
+        "parameters": [
+          {
+            "name": "orgId",
+            "in": "formData",
+            "description": "公安id,6位编号",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "startDate",
+            "in": "formData",
+            "description": "查询下载做笔录的开始时间yyyy-MM-dd HH:mm:ss格式传入",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "in": "formData",
+            "description": "查询下载做笔录的结束时间yyyy-MM-dd HH:mm:ss格式传入",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "blbh",
+            "in": "formData",
+            "description": "笔录编号",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/ky/getAjCountAll": {
+      "post": {
+        "tags": [
+          "统计接口"
+        ],
+        "summary": "获取每个·公安单位以及按市级划分的案件数",
+        "description": "返回结果说明：</br>1.datas\t案件数据\tList</br>\n2.success\t返回结果状态，true：成功，false：失败\tInteger</br>\n3.msg\t返回异常信息\tString</br>\n1.orgId     \t机构id\tString</br>\n2.orgName\t机构名称\tString</br>\n3.count\t数量\tString</br>\n",
+        "operationId": "getAjCountAll",
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "formData",
+            "description": "开始时间 时间格式为：yyyy-MM-dd hh24:mm:ss 即：2011-01-01 00:00:00",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "in": "formData",
+            "description": "结束时间 时间格式为：yyyy-MM-dd hh24:mm:ss 即：2011-01-01 23:59:59",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/ky/getJrqkCount": {
+      "get": {
+        "tags": [
+          "统计接口"
+        ],
+        "summary": "统计获取六必录、轨迹、工作站建设情况",
+        "description": "返回结果类型说明:</br>1.datas\t案件数据\tList</br>\n2.success\t返回结果状态，true：成功，false：失败\tInteger</br>\n3.msg\t返回异常信息\tString</br>\n1.orgId\t组织机构id\tString</br>\n2.mingcheng\t组织机构名称\tString</br>\n3.category\t种类0 表示六必录 1 表示 轨迹 2表示 工作站\tString</br>\n4.count\t统计数量</br>",
+        "operationId": "getJrqkCount",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/ky/getJkInfo": {
+      "get": {
+        "tags": [
+          "统计接口"
+        ],
+        "summary": "获取接口平台信息",
+        "description": "返回结果类型说明:</br>1.datas\t案件数据\tList</br>\n2.success\t返回结果状态，true：成功，false：失败\tInteger</br>\n3.msg\t返回异常信息\tString</br>\n1.consumer_name\t公司名称\tString</br>\n2.server_ip\t服务器ip\tString</br>\n3.category\t\n    ZFAPP(\"6\", \"执法app\"),\n    YSPPT(\"5\", \"音视频平台\"),\n    SACW(\"4\", \"涉案财物\"),\n    CZXJ(\"3\", \"沧州巡警\"),\n    GONGZUOZHAN(\"2\", \"工作站\"),\n    GUIJI(\"1\", \"轨迹\"),\n    LIUBILU(\"0\", \"六必录\");\tString</br>\n4.org_id\t授权范围</br>5.org_name\t名称\tString</br>\n6.description\t描述\tString</br>\n7.contact\t联系方式\tString</br>\n8.orgIdLo\t安装位置\tString</br>\n9.orgIdNa\t安装位置名称\tString</br>\n",
+        "operationId": "getJkInfo",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/ky/recevieCaseCountData": {
+      "post": {
+        "tags": [
+          "统计接口"
+        ],
+        "summary": "获取案件信息数据接口",
+        "description": "返回结果说明：</br>1.datas\t案件数据\tList</br>\n2.success\t返回结果状态，true：成功，false：失败\tInteger</br>\n3.msg\t返回异常信息\tString</br>\n1.orgId     \t机构id\tString</br>\n2.orgName\t机构名称\tString</br>\n3.count\t数量\tString</br>\n4.bananrenId\t办案人id\tString</br>\n5.xingming\t办案人姓名\tString</br>",
+        "operationId": "recevieCaseCountData",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "formData",
+            "description": "用户id,只有在查询类型为3,4查询所下所有案件数量的条件下载，才会出现人员id （如163511090302）",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "orgId",
+            "in": "formData",
+            "description": "办案单位编号（必传）如果queryType为1,2,3则必须传6位公安编号，如果queryType为4，则要传12位办案单位编码",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "queryType",
+            "in": "formData",
+            "description": "查询类型, 1：全市案件数量，2：分县局案件数量，3：全所案件数量，4：民警案件数量（必传）",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "markTypeId",
+            "in": "formData",
+            "description": "案件性质：1刑事案件、2行政案件",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "startDate",
+            "in": "formData",
+            "description": "开始时间 时间格式为：yyyy-MM-dd hh24:mm:ss 即：2011-01-01 00:00:00",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "in": "formData",
+            "description": "结束时间 时间格式为：yyyy-MM-dd hh24:mm:ss 即：2011-01-01 23:59:59",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/ky/recevieAlarmCountData": {
+      "post": {
+        "tags": [
+          "统计接口"
+        ],
+        "summary": "获取接处警信息数据接口",
+        "description": "返回结果说明：</br>1.datas\t案件数据\tList</br>\n2.success\t返回结果状态，true：成功，false：失败\tInteger</br>\n3.msg\t返回异常信息\tString</br>\n1.orgId     \t机构id\tString</br>\n2.orgName\t机构名称\tString</br>\n3.count\t数量\tString</br>\n4.chujingrenId\t出警人\tString</br>\n5.xingming\t办案人姓名\tString</br>",
+        "operationId": "recevieAlarmCountData",
+        "parameters": [
+          {
+            "name": "caseType",
+            "in": "formData",
+            "description": " 1：案件，2：非案警情；",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "userId",
+            "in": "formData",
+            "description": "用户id,只有在查询类型为3查询所下所有案件数量的条件下载，才会出现人员id （如163511090302）",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "orgId",
+            "in": "formData",
+            "description": "办案单位编号（必传）如果queryType为1,2,3则必须传6位公安编号，如果queryType为4，则要传12位办案单位编码",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "queryType",
+            "in": "formData",
+            "description": "查询类型, 1：全市案件数量，2：分县局案件数量，3：全所案件数量，4：民警案件数量（必传）",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "markTypeId",
+            "in": "formData",
+            "description": "案件性质：1刑事案件、2行政案件",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "startDate",
+            "in": "formData",
+            "description": "开始时间",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "in": "formData",
+            "description": "结束时间",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/ky/recevieCaseListData": {
+      "post": {
+        "tags": [
+          "统计接口"
+        ],
+        "summary": "分页查询接处警信息接口",
+        "description": "返回结果说明：</br>1.datas\t案件数据\tList</br>\n2.success\t返回结果状态，true：成功，false：失败\tInteger</br>\n3.msg\t返回异常信息\tString</br>\n1.bianhao\t接警编号\tString</br>\n2.gonganbianhao\t公安编号（组织机构编号）\tString</br>\n3.banandanwei\t办案单位\tString</br>\n4.jiejingdanweiId\t接警单位\tString</br>\n5.jiejingdanweimc\t接警单位名称\tString</br>\n6.jingqingmingcheng\t警情名称\tString</br>\n7.faxiandidian\t发现地点\tShort</br>\n8.bananrenyuan1Id\t办案民警1编号\tString</br>\n9.bananrenyuan2Id\t办案民警2编号\tDate</br>\n10.baoanshijian\t报案时间\tString</br>\n11.chujingshijian\t处警时间\tString</br>\n12.chujingren1Id\t处警人编号\tString</br>\n13.chujingren2Id\t处警人编号\tString</br>\n14.anjianxingzhi\t案件性质（立案后有值）</br>\t\n15.total\t总页数\tString</br>\n16.rows\t返回查询接口\tList</br>\n17.BANANREN1XM\t办案人1姓名\tString</br>\n18.BANANREN2XM\t办案人2姓名\tString</br>\n19.CHUJINGREN1XM\t出警人1姓名\tString</br>\n20.CHUJINGREN2XM\t出警人2姓名\tString</br>\n",
+        "operationId": "recevieCaseListData",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "formData",
+            "description": " 当前页码",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "rows",
+            "in": "formData",
+            "description": " 每页显示条数",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "caseType",
+            "in": "formData",
+            "description": " 办案单位编号（必传）12 位机构编码",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "orgId",
+            "in": "formData",
+            "description": " 1：案件，2：非案警情",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "startDate",
+            "in": "formData",
+            "description": "开始时间 时间格式为：yyyy-MM-dd hh24:mm:ss 即：2011-01-01 00:00:00",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "in": "formData",
+            "description": "结束时间 时间格式为：yyyy-MM-dd hh24:mm:ss 即：2011-01-01 23:59:59",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/ky/recevieCountByOrgId": {
+      "post": {
+        "tags": [
+          "统计接口"
+        ],
+        "summary": "获取接处警信息数据接口",
+        "description": "返回结果说明：</br>1.datas\t案件数据\tList</br>\n2.success\t返回结果状态，true：成功，false：失败\tInteger</br>\n3.msg\t返回异常信息\tString</br>\n1.orgId     \t机构id\tString</br>\n2.orgName\t机构名称\tString</br>\n3.count\t数量\tString</br>\n",
+        "operationId": "recevieCountByOrgId",
+        "parameters": [
+          {
+            "name": "queryType",
+            "in": "formData",
+            "description": " 查询类型, 1：查询案件数量2：查询接处警数量",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "orgId",
+            "in": "formData",
+            "description": "办案单位编号（必传）12 位",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "markTypeId",
+            "in": "formData",
+            "description": " 案件性质：1刑事案件、2行政案件(只有querType为1时这个参数才有意义)",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "startDate",
+            "in": "formData",
+            "description": " 开始时间 时间格式为：yyyy-MM-dd hh24:mm:ss 即：2011-01-01 00:00:00",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "in": "formData",
+            "description": "结束时间 时间格式为：yyyy-MM-dd hh24:mm:ss 即：2011-01-01 23:59:59",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/ky/recevieCaseCountDataGroupByYear": {
+      "post": {
+        "tags": [
+          "统计接口"
+        ],
+        "summary": "获取近3年内案件数量统计",
+        "description": "返回结果说明：</br>1.datas\t案件数据\tList</br>\n2.success\t返回结果状态，true：成功，false：失败\tInteger</br>\n3.msg\t返回异常信息\tString</br>\n1.ID     \t机构id\tString</br>\n2.MINGCHENG\t机构名称\tString</br>\n3.COUNT\t数量\tString</br>\n4.YEAR 年份",
+        "operationId": "recevieCaseCountDataGroupByYear",
+        "parameters": [
+          {
+            "name": "gonganbianhao",
+            "in": "formData",
+            "description": "公安编号",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/sacw/getWrkWps": {
+      "post": {
+        "tags": [
+          "涉案财物接口"
+        ],
+        "summary": "查询民警还未入库物品",
+        "description": "1.datas\t案件数据\tList</br>\n2.success\t返回结果状态，true：成功，false：失败\tInteger</br>\n3.msg\t返回异常信息\tString</br>1.anjianbianhao 案件编号</br>2.wupinbianhao 物品编号</br>",
+        "operationId": "getWrkWps",
+        "parameters": [
+          {
+            "name": "jinghao",
+            "in": "formData",
+            "description": "警号",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/sacw/getTbScwp": {
+      "post": {
+        "tags": [
+          "涉案财物接口"
+        ],
+        "summary": "同步执法办案删除物品",
+        "description": "返回结果类型说明:</br>1.datas\t案件数据\tList</br>\n2.success\t返回结果状态，true：成功，false：失败\tInteger</br>\n3.msg\t返回异常信息\tString</br>\n1.id\t组织机构id\tString</br>\n2.mingcheng\t组织机构名称\tString</br>\n3.parentId\t组织机构上下级\tString</br>\n4.actflag\t数据标志（actflag=1新增2修改4删除）</br>5.jiancheng 简称</br>",
+        "operationId": "getTbScwp",
+        "parameters": [
+          {
+            "name": "gonganid",
+            "in": "formData",
+            "description": "公安id",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "startDate",
+            "in": "formData",
+            "description": "数据变更的开始时间",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "in": "formData",
+            "description": "数据变更的结束时间",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/sacw/getOrgListSacw": {
+      "get": {
+        "tags": [
+          "涉案财物接口"
+        ],
+        "summary": "获取组织机构数据",
+        "description": "返回结果类型说明:</br>1.datas\t案件数据\tList</br>\n2.success\t返回结果状态，true：成功，false：失败\tInteger</br>\n3.msg\t返回异常信息\tString</br>\n1.id\t组织机构id\tString</br>\n2.mingcheng\t组织机构名称\tString</br>\n3.parentId\t组织机构上下级\tString</br>\n4.actflag\t数据标志（actflag=1新增2修改4删除）</br>5.jiancheng 简称</br>",
+        "operationId": "getOrgListSacw",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/sacw/getSacwCases": {
+      "post": {
+        "tags": [
+          "涉案财物接口"
+        ],
+        "summary": "涉案财物案件基本信息",
+        "description": "1.datas\t案件数据\tList</br>\n2.success\t返回结果状态，true：成功，false：失败\tInteger</br>\n3.msg\t返回异常信息\tString</br>\n1.gonganbianhao\t公安编号（组织机构编号）\tString</br>\n2.anjianbianhao\t案件编号\tString</br>\n3.anjianmingcheng\t案件名称\tString</br>\n4.anjianleibie\t案件类别\tString</br>\n5.banandanweiId\t办案单位编号\tString</br>\n6.bananrenyuan1Id\t办案民警1编号\tString</br>\n7.Bananrenyuan2Id\t办案民警2编号\tString</br>\n8.shouliriqi\t办案民警1编号\tString</br>\n9.lianriqi\t办案民警2编号\tString</br>\n10.jianyaoanqing\t简要案情\tString</br>\n11.anjianbiaozhi\t案件标志（1:刑事案件2：行政案件）\tString</br>orgName: 单位名称,       </br>\nbananren1xm: 办案人2姓名,</br>\nbananren2xm: 办案人1姓名,</br>\nlbmc: 案件类别名称       </br>\n\n",
+        "operationId": "getSacwCases",
+        "parameters": [
+          {
+            "name": "crkbz",
+            "in": "formData",
+            "description": "出入库标志,1表示查询入库2表示查询出库",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "jinghao",
+            "in": "formData",
+            "description": "警号",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "createdDateStart",
+            "in": "formData",
+            "description": "开始时间yyyy-MM-dd HH:mm:ss格式，如2011-01-01 00:00:00",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "createdDateEnd",
+            "in": "formData",
+            "description": "结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "startDate",
+            "in": "formData",
+            "description": "记录修改开始时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "in": "formData",
+            "description": "记录修改结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "actflag",
+            "in": "formData",
+            "description": "1新增2修改4删除",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "cuoshi",
+            "in": "formData",
+            "description": "措施编号",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/sacw/getSelIP": {
+      "post": {
+        "tags": [
+          "涉案财物接口"
+        ],
+        "summary": "获取图片服务器ip",
+        "description": "返回参数：图片服务器ip",
+        "operationId": "getSelIP",
+        "parameters": [
+          {
+            "name": "bianhao",
+            "in": "formData",
+            "description": "编号anjianbianhao.substring(1, 7)",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/sacw/getSignSeal": {
+      "post": {
+        "tags": [
+          "涉案财物接口"
+        ],
+        "summary": "查询单位证章信息",
+        "description": "此接口不能用页面调用方式测试，只能用程序调用测试</br>证章为png格式，String clob=\"证章字符串\" byte[] imgBytes=new BASE64Decoder().decodeBuffer(clob);\n        FileUtils.writeByteArrayToFile(file,imgBytes);",
+        "operationId": "getSignSeal",
+        "parameters": [
+          {
+            "name": "sealtype",
+            "in": "formData",
+            "description": "签章类型 1 表示 公安机关印章 5 表示 办案单位印章 7 表示人员的个人签章",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "bianhao",
+            "in": "formData",
+            "description": "办案单位id，比如：唐山市公安机关印章为：130200000000，法制支队：130200130000，警员 刘刚 警号 111111",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/sacw/getSacwYbwpDrk": {
+      "post": {
+        "tags": [
+          "涉案财物接口"
+        ],
+        "summary": "获取一般物品信息接口(待入库)",
+        "description": " 返回数据字段说明</br>ACTUSER 操作人</br>ACTTIME 操作时间</br>ACTFLAG 操作标识</br>      WUPINBIANHAO 物品唯一标识,</br> \n    ANJIANBIANHAO 案件编号 关联案件表  </br>\n    RENYUANBIANHAO 人员编号 物品和人员关联</br>\n    MINGCHENG 物品名称</br>TIAOXINGMA 条形码\n    DENGJIRIQI 物品登记日期</br>\n    WUPINXINGZHI 物品性质 </br>\n    CUOSHI 物品措施</br>\n    CUOSHIRIQI 措施日期</br>\n    LEIXING 物品类型</br>\n    GUIGE 规格</br>\n    SHULIANG 数量</br>\n    SHULIANGDANWEI 数量单位</br>\n    JIAZHI,价值</br>\n    XINGHAO,型号</br>\n    PINPAI,品牌</br>\n    SHIYANG,式样</br>\n    CHANDI,产地</br>\n    LAIYUAN,来源</br>\n    ZHIDI,质地</br>\n    CHENGSE,成色</br>\n    YANSE,颜色</br>\n    ZHONGLIANG,重量</br>\n    ZHONGLIANGDANWEI,重量单位</br>\n    GOUMAIRIQI,购买日期</br>\n    ZISHENBIANHAO自身编号,</br>\n    QITA,其他</br>\n    TESHUBIAOZHI,特殊标志</br>\n    WUPINTEZHENG,物品特征</br>\n    BEIZHU,备注</br>\n    WUPINZHONGLE 物品种类,</br>\n    IFYJ 是否移交</br>\n    IFCHAOQI 是否超期</br>\n    IFSUNSHI 是否损失</br>\n    SUNSHIJIAZHI 损失价值</br>\n    WANHUIJIAZHI 挽回价值</br>\n    SHIFOUKOUYA 是否扣押 1表示扣押</br>\n    IFCQRK --是否超期入库</br>\n    IFCQCK --是否超期出库</br>\n    IFCQYC --是否超期异常</br>\n    IFCQYK --是否超期移库</br>\n    SHOUJIXULIEHAO 手机序列号</br>\n    DIANNAOMAC 电脑mac</br>\n    CHEJIAHAO 车架号</br>\n    DIANJIHAOMA 电机号码</br>",
+        "operationId": "getSacwYbwpDrk",
+        "parameters": [
+          {
+            "name": "ajbh",
+            "in": "formData",
+            "description": "案件编号",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "dgsjStart",
+            "in": "formData",
+            "description": " 物品登记时间开始，开始时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "dgsjEnd",
+            "in": "formData",
+            "description": " 物品登记时间结束，结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "startDate",
+            "in": "formData",
+            "description": "开始时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "in": "formData",
+            "description": "结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "cuoshiStart",
+            "in": "formData",
+            "description": "开始时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "cuoshiEnd",
+            "in": "formData",
+            "description": "结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "actflag",
+            "in": "formData",
+            "description": "1新增2修改4删除",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "orgId",
+            "in": "formData",
+            "description": "办案单位id 12 位编号",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "cuoshi",
+            "in": "formData",
+            "description": "措施编号",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/sacw/getSacwYbwpDck": {
+      "post": {
+        "tags": [
+          "涉案财物接口"
+        ],
+        "summary": "获取一般物品信息接口(待出库)",
+        "description": " 返回数据字段说明</br>ACTUSER 操作人</br>ACTTIME 操作时间</br>ACTFLAG 操作标识</br>      WUPINBIANHAO 物品唯一标识,</br> \n    ANJIANBIANHAO 案件编号 关联案件表  </br>\n    RENYUANBIANHAO 人员编号 物品和人员关联</br>\n    MINGCHENG 物品名称</br>TIAOXINGMA 条形码\n    DENGJIRIQI 物品登记日期</br>\n    WUPINXINGZHI 物品性质 </br>\n    CUOSHI 物品措施</br>\n    CUOSHIRIQI 措施日期</br>\n    LEIXING 物品类型</br>\n    GUIGE 规格</br>\n    SHULIANG 数量</br>\n    SHULIANGDANWEI 数量单位</br>\n    JIAZHI,价值</br>\n    XINGHAO,型号</br>\n    PINPAI,品牌</br>\n    SHIYANG,式样</br>\n    CHANDI,产地</br>\n    LAIYUAN,来源</br>\n    ZHIDI,质地</br>\n    CHENGSE,成色</br>\n    YANSE,颜色</br>\n    ZHONGLIANG,重量</br>\n    ZHONGLIANGDANWEI,重量单位</br>\n    GOUMAIRIQI,购买日期</br>\n    ZISHENBIANHAO自身编号,</br>\n    QITA,其他</br>\n    TESHUBIAOZHI,特殊标志</br>\n    WUPINTEZHENG,物品特征</br>\n    BEIZHU,备注</br>\n    WUPINZHONGLE 物品种类,</br>\n    IFYJ 是否移交</br>\n    IFCHAOQI 是否超期</br>\n    IFSUNSHI 是否损失</br>\n    SUNSHIJIAZHI 损失价值</br>\n    WANHUIJIAZHI 挽回价值</br>\n    SHIFOUKOUYA 是否扣押 1表示扣押</br>\n    IFCQRK --是否超期入库</br>\n    IFCQCK --是否超期出库</br>\n    IFCQYC --是否超期异常</br>\n    IFCQYK --是否超期移库</br>\n    SHOUJIXULIEHAO 手机序列号</br>\n    DIANNAOMAC 电脑mac</br>\n    CHEJIAHAO 车架号</br>\n    DIANJIHAOMA 电机号码</br>",
+        "operationId": "getSacwYbwpDck",
+        "parameters": [
+          {
+            "name": "ajbh",
+            "in": "formData",
+            "description": "案件编号",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "dgsjStart",
+            "in": "formData",
+            "description": " 物品登记时间开始，开始时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "dgsjEnd",
+            "in": "formData",
+            "description": " 物品登记时间结束，结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "startDate",
+            "in": "formData",
+            "description": "开始时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "in": "formData",
+            "description": "结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "actflag",
+            "in": "formData",
+            "description": "1新增2修改4删除",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/sacw/getSacwWpcl": {
+      "post": {
+        "tags": [
+          "涉案财物接口"
+        ],
+        "summary": "获取物品车辆",
+        "description": " 返回数据字段说明</br>ACTTIME, 时间              </br>\nACTFLAG, 标识              </br>\nACTUSER, 操作人            </br>\nWUPINBIANHAO, 物品标号     </br>\nHAOPAIZHONGLEI, 号牌种类   </br>\nCHEPAIHAOMA, 车牌号码      </br>\nCHEJIAHAOMA,车架号码       </br>\nCHEXINGLUNSHI, 车型轮式    </br>\nFADONGJIHAO, 发动机号码    </br>\nGANGYINHAO, 钢印号码       </br>\nDIANJIHAO, 电动机号码      </br>\nCHUCIDENGJI, 初次登记日期  </br>\nSHIFOUBAOXIAN, 是否保险    </br>\nBAOXIANQINGXING保险情况    </br>",
+        "operationId": "getSacwWpcl",
+        "parameters": [
+          {
+            "name": "wpbh",
+            "in": "formData",
+            "description": "物品编号",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "startDate",
+            "in": "formData",
+            "description": "结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "in": "formData",
+            "description": "结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "actflag",
+            "in": "formData",
+            "description": "1新增2修改4删除",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/sacw/getSacwWpsj": {
+      "post": {
+        "tags": [
+          "涉案财物接口"
+        ],
+        "summary": "获取物品手机",
+        "description": " 返回数据字段说明</br>ACTTIME, 时间              </br>\nACTFLAG, 标识              </br>\nACTUSER, 操作人            </br>\nWUPINBIANHAO, 物品标号     </br>\nSHOUJIHAOMA, 手机号码   </br>\nDIANZICHUANHAO，电子串号    </br>",
+        "operationId": "getSacwWpsj",
+        "parameters": [
+          {
+            "name": "wpbh",
+            "in": "formData",
+            "description": "物品编号",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "startDate",
+            "in": "formData",
+            "description": "结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "in": "formData",
+            "description": "结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "actflag",
+            "in": "formData",
+            "description": "1新增2修改4删除",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/sacw/getSacwWppqdj": {
+      "post": {
+        "tags": [
+          "涉案财物接口"
+        ],
+        "summary": "获取物品票券单据",
+        "description": " 返回数据字段说明</br>ACTTIME, 时间              </br>\nACTFLAG, 标识              </br>\nACTUSER, 操作人            </br>\nWUPINBIANHAO, 物品标号     </br>\nPIAOJUHAOMA, 票据号码   </br>\nPIAOJUMIANZHI, 票据面值 </br>\nYOUXIAOQIXIAN,有效期限  </br>\nFAXINGRIQI, 发行日期    </br>\nFAXINGDANWEI,发行单位   </br>",
+        "operationId": "getSacwWppqdj",
+        "parameters": [
+          {
+            "name": "wpbh",
+            "in": "formData",
+            "description": "物品编号",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "startDate",
+            "in": "formData",
+            "description": "结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "in": "formData",
+            "description": "结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "actflag",
+            "in": "formData",
+            "description": "1新增2修改4删除",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/sacw/getSacwWpqzdy": {
+      "post": {
+        "tags": [
+          "涉案财物接口"
+        ],
+        "summary": "获取物品枪支弹药",
+        "description": " 返回数据字段说明</br>ACTTIME, 时间              </br>\nACTFLAG, 标识              </br>\nACTUSER, 操作人            </br>\nWUPINBIANHAO, 物品标号     </br>\nQIANGHAO, 枪号          </br>\nKOUJING, 口径（MM）     </br>\nDANGANBIANHAO, 档案编号 </br>\nCHIQIANGZHENG,持枪证    </br>\nFAZHENGRIQI,发证日期    </br>\nZIDANSHUMU, 子弹数目    </br>\nSHIYONGQUYU, 使用区域   </br>\nYOUXIAOQIXIAN有效期限   </br>",
+        "operationId": "getSacwWpqzdy",
+        "parameters": [
+          {
+            "name": "wpbh",
+            "in": "formData",
+            "description": "物品编号",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "startDate",
+            "in": "formData",
+            "description": "结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "in": "formData",
+            "description": "结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "actflag",
+            "in": "formData",
+            "description": "1新增2修改4删除",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/sacw/getSacwWpdp": {
+      "post": {
+        "tags": [
+          "涉案财物接口"
+        ],
+        "summary": "获取物品毒品",
+        "description": " 返回数据字段说明</br>ACTTIME, 时间              </br>\nACTFLAG, 标识              </br>\nACTUSER, 操作人            </br>\nWUPINBIANHAO, 物品标号     </br>\nDUPINBIAOZHI, 毒品标志    </br>\nZD_ZHONGZI, 之都种子      </br>\nZD_MUDI, 制毒目的         </br>\nDP_CHUCHA, 毒品 初查      </br>\nDP_CHAZHENG, 查证         </br>\nDP_JIAOHUO, 缴获          </br>\nDP_GOUJIN, 购进           </br>\nDP_MAICHU, 卖出           </br>\nDP_XIAOSHOU, 销售         </br>\nZI_DANWEI, 单位           </br>\nZI_PINMING,伪装品名       </br>\nZI_XUKEZHENG, 许可证      </br>\nZI_XIAOSHOU, 销售         </br>\nDP_CCDANWEI, 初查重量单位 </br>\nDP_CZDANWEI, 查证重量单位 </br>\nDP_JHDANWEI, 缴获重量单位 </br>\nDP_CHAHUORIQI, 查获日期   </br>\nZI_CHUZHI,  处置          </br>\nDP_CHUZHI,  处置          </br>\nZI_CHAHUORIQI,  制毒查获  </br>\nZD_CHAHUORIQI,  查获日期  </br>\nDP_GOUJINDANWEI, 购进单位 </br>\nDP_MAICHUDANWEI 卖出单位  </br>",
+        "operationId": "getSacwWpdp",
+        "parameters": [
+          {
+            "name": "wpbh",
+            "in": "formData",
+            "description": "物品编号",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "startDate",
+            "in": "formData",
+            "description": "结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "in": "formData",
+            "description": "结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "actflag",
+            "in": "formData",
+            "description": "1新增2修改4删除",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/sacw/getSacwWpgj": {
+      "post": {
+        "tags": [
+          "涉案财物接口"
+        ],
+        "summary": "获取物品轨迹信息",
+        "description": " 返回数据字段说明</br>ACTTIME, 时间              </br>\nACTFLAG, 标识              </br>\nACTUSER, 操作人            </br>\nWUPINBIANHAO, 物品标号     </br>\nCUOSHI, 措施\nCUOSHIRIQI, 操作日期\nPAIXURIQI, 排序日期\nZHUANGTAIDM, 状态代码\nZHUANGTAIMC, 状态名称\nMIAOSHU, 描述\nCAOZUOLIYOU, 物品名称\nQINGDANBIANHAO, 清单编号 （用这个编号去查找文书）\nCAOZUOZHTAI, 操作状态\nGUIJIRIQI, 轨迹日期\nTIAOXINGMA, 条形码\nLURUSHIJIAN, 录入时间\nLURUREN, 录入人\nWPBGY 物品保管员",
+        "operationId": "getSacwWpgj",
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "formData",
+            "description": "结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "in": "formData",
+            "description": "结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "gjstartDate",
+            "in": "formData",
+            "description": "结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "gjendDate",
+            "in": "formData",
+            "description": "结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "actflag",
+            "in": "formData",
+            "description": "1新增2修改4删除",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/sacw/getWfr": {
+      "post": {
+        "tags": [
+          "涉案财物接口"
+        ],
+        "summary": "获取违法人信息",
+        "description": " 返回数据字段说明</br>ACTTIME, 操作时间               </br>\nACTFLAG, 标识                   </br>\nACTUSER, 操作人                 </br>\nANJIANBIANHAO, 案件编号         </br>\nXINGMING, 姓名                  </br>\nXINGBIE, 性别                   </br>\nCENGYONGMING, 曾用名            </br>\nBIEMINGCHUOHAO, 绰号            </br>\nCHUSHENGRIQI, 出生日期          </br>\nNIANLING, 年龄                  </br>\nMINZU, 民族                     </br>\nZHENGJIANDIAMA, 证件代码        </br>\nZHENGJIANHAOMA, 证件号码        </br>\nWENHUACHENGDU, 文化程度         </br>\nZHENGZHIMIANMAO, 政治面貌       </br>\nGONGZUODANWEI, 工作单位         </br>\nLIANXIDIANHUA,  联系电话        </br>\nZHIYE, 职业                     </br>\nGUOJI, 国籍                     </br>\nHUJIDIQUHUA, 户籍地区划         </br>\nHUJIDIDIZHI, 户籍地地址         </br>\nZHUZHIQUHUA, 住址区划           </br>\nZHUZHIDIZHI, 住址地址           </br>\nGERENJIANLI, 个人简历           </br>\nWEIFAJINGLI, 违法经历           </br>\nWEIFAZHENGJU,  违法证据         </br>\nJIASHUXINGMING,  家属姓名       </br>\nJIASHUZHUZHI, 家属住址          </br>\nJIASHUGUANXI,  家属关系         </br>\nRENYUANBIANHAO,  人员编号       </br>\nGERENGAISHU,  个人概述          </br>\nSHEXIANZUIMING,  涉嫌罪名       </br>\nSHEXIANZUIMINGDM,  涉嫌罪名代码 </br>\nQUANPIN, 全拼                   </br>\nJIANCHAGONGSU, 检查公诉         </br>\nFAYUANPANJUE,  法院判决         </br>\nJIYADIDIANDM, 羁押代码          </br>\nSHEXIANZUIMINGTK, 涉嫌罪名      </br>\nXIANSHIZHUANGKUANG, 显示状况    </br>\nHANYUKOUYIN, 汉语口音           </br>\nZHUANCHANGTECHANG, 专长特长     </br>\nRENYUANLEIBIE,  人员类别        </br>\nBAOMIJIBIE,  保密级别           </br>\nZUOANYUANYIN,  作案原因         </br>\nZUOANTEDIAN, 作案特点           </br>\nZHUAHUOFANGSHI,  作案方式       </br>\nZHUAHUOREN,  抓获人             </br>\nZHUAHUORIQI, 抓获日期           </br>\nZHUAHUODIDIAN,  抓获地点        </br>\nZHUAHUODANWEI1,  抓获单位1      </br>\nZHUAHUODANWEI2,  抓获单位2      </br>\nSHENGAO,  身高                  </br>\nBENRENDIANHUA, 本人电话         </br>\nNIAOJIAN,  尿检                 </br>\nIFZFCS, 是否在执法场所          </br>\nBUGL_FLAG,                      </br>\nRENYUANSHENFEN, 人员身份        </br>\nQKRYBH, 前科人员编号            </br>\nXXCJ,                           </br>\nLURUSHIJIAN, 录入时间           </br>\nISJIAN,                         </br>\nJIYADIDIANMC, 羁押地点          </br>\nFALVYIJU, 法律依据              </br>\nCOMPANY, 公司                   </br>\nWEIFASHISHI 违法事实            </br>",
+        "operationId": "getWfr",
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "formData",
+            "description": "结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "in": "formData",
+            "description": "结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "createdDateStart",
+            "in": "formData",
+            "description": "开始时间yyyy-MM-dd HH:mm:ss格式，如2011-01-01 00:00:00",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "createdDateEnd",
+            "in": "formData",
+            "description": "开始时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "actflag",
+            "in": "formData",
+            "description": "1新增2修改4删除",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/sacw/getWfdw": {
+      "post": {
+        "tags": [
+          "涉案财物接口"
+        ],
+        "summary": "获取违法单位信息",
+        "description": " 返回数据字段说明</br>ACTTIME, 操作时间</br>\nACTFLAG, 操作标识</br>\nACTUSER,  操作人</br>\nANJIANBIANHAO,  案件编号</br>\nGONGANBIANHAO, 公安编号</br>\nBANANDANWEIID, 办案单位id</br>\nDANWEILEIBIE, 单位类别</br>\nDANWEIMINGCHENG, 单位名称</br>\nDANWEIDIZHI, 单位地址</br>\nDANWEIDIANHUA, 单位电话</br>\nJINGJIXINGZHI, 经济性质</br>\nCONGYESHU, 从业人数</br>\nZHIZHAOHAO, 执照号</br>\nSHUIWUHAO, 税务号</br>\nQIYEDAIMA, 企业代码</br>\nQIYELEIXING,  企业类型</br>\nGUANLIBUMEN, 管理部门</br>\nZHUCEZIBEN, 注册资本</br>\nZHUCEXIANGZHI, 注册性质</br>\nFAZHAORIQI,发照日期</br>\nZHUCERIQI, 注册日期</br>\nKAIYERIQI, 开业日期</br>\nZHUXIAORIQI, 注销日期</br>\nDANWEISHUXING,  单位属性</br>\nFADINGDAIBIAO,  法定代表</br>\nZHENGJIANHAOMA, 证件号码</br>\nZHUZHIDIZHI,  住址地址</br>\nLIANXIDIANHUA, 联系电话</br>\nWAIWENMINGCHENG, 外文名称</br>\nFENZHIJIGOU,  分支机构</br>\nNIANSHENRIQI,  年生日期</br>\nGUDONGCHUZI, 股东出资</br>\nJINGYINGFANWEI,  经营范围</br>\nWEIFAJINGLI,  违法经历</br>\nBAOMIJIBIE, 保密级别</br>\nSHEANJINE, 涉案金额</br>\nSUNSHIJINE,  损失金额</br>\nWANHUIJINE, 挽回金额</br>\nDENGJIRENXM,登记人姓名</br>\nDENGJIRIQI, 登记日期</br>\nYINHANGXINXI, 银行信息</br>\nDANWEIBIANHAO, 单位编号</br>\nWEIFASHISHI,  违法事实</br>\nWEIFAZHENGJU, 违法证据</br>\nSHEXIANZUIMINGTK, 涉嫌罪名条款</br>\nSHEXIANZUIMINGDM, 代码代码</br>\nSHEXIANZUIMING 罪名</br>",
+        "operationId": "getWfdw",
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "formData",
+            "description": "结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "in": "formData",
+            "description": "结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "createdDateStart",
+            "in": "formData",
+            "description": "开始时间yyyy-MM-dd HH:mm:ss格式，如2011-01-01 00:00:00",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "createdDateEnd",
+            "in": "formData",
+            "description": "开始时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "actflag",
+            "in": "formData",
+            "description": "1新增2修改4删除",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/sacw/getZr": {
+      "post": {
+        "tags": [
+          "涉案财物接口"
+        ],
+        "summary": "获取证人",
+        "description": " 返回数据字段说明</br>ACTTIME, 操作时间</br>\nACTFLAG, 操作标识</br>\nACTUSER,  操作人</br>\nGONGANBIANHAO, 公安编号</br>\nBANANDANWEIID, 单位id</br>\nANJIANBIANHAO,  案件编号</br>\nRENYUANBIANHAO, 人员编号</br>\nSHENFENZHENGHAO,  身份证号</br>\nXINGMING, 姓名</br>\nXINGBIE, 性别</br>\nCHUSHENGRIQI, 出生日期</br> \nCENGYONGMING, 曾用名</br>\nBIEMINGCHUOHAO,  绰号</br>\nMINZU,民族</br>\nWENHUACHENGDU, 文化程度 </br>\nGONGZUODANWEI, 工作单位</br>\nZHIYE, 职业</br>\nXIANZHUZHI, 现住址</br> \nLIANXIDIANHUA,  联系电话</br>\nHUJIDIQUHUA,  户籍地区划</br>\nRENYUANLEIBIE, 人员类别</br>\nJIGUAN,  籍贯</br>\nRENYUANSHUXING, 人员属性 </br>\nSHENGAO,  身高</br>\nXUEXING, 血型</br>\nSHENFEN,  身份</br>\nBAOMIJIBIE, 保密级别</br>\nZHENGRENZHONGLEI, 证人种类</br>\nZUOZHENGRIQI,  作证日期</br>\nZUOZHENGDIDIAN,  作证地点</br>\nGUOJIADIQU,  国家地区</br>\nYINGWENXINGMING, 英文姓名</br>\nZHENGJIANZHONGLEI,  证件种类</br>\nZHENGJIANHAOMA, 证件号码</br>\nQIANZHENGZHONGLEI, 签证种类</br>\nTINGLIUYOUXIAOQI, 停留有效期</br>\nZUOZHENGJINGGUO, 作证经过</br>\nRENXIANGZHAOPIAN, 人像照片</br>\nIFZFCS 是否在执法场所</br>\n",
+        "operationId": "getZr",
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "formData",
+            "description": "结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "in": "formData",
+            "description": "结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "actflag",
+            "in": "formData",
+            "description": "1新增2修改4删除",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/sacw/getWs": {
+      "post": {
+        "tags": [
+          "涉案财物接口"
+        ],
+        "summary": "相关文书查看",
+        "description": "将返回的参数拼接到链接中：http://27.191.224.17:8091/WLZFBA/pdfCTRL/wsToPdf?wsid=Q1302001300002017110056&wslb=1419&rybh=R1302001300002017110006&pageNo=0 \n",
+        "operationId": "getWs",
+        "parameters": [
+          {
+            "name": "wpbh",
+            "in": "formData",
+            "description": "物品编号",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "cuoshi",
+            "in": "formData",
+            "description": "物品措施",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/sacw/updateOrAddWpgj": {
+      "post": {
+        "tags": [
+          "涉案财物接口"
+        ],
+        "summary": "涉案财物回写物品轨迹信息",
+        "description": "[{ \"id\": \"物品轨迹信息id\",   actflag\": \"操作表示 1 表示插入数据 2表示 更新数据 4表示删除数据\", \"actuser\": \"操作人\" ,“wupinbianhao”：”物品编号”, “cuoshi”：” 措施”, “cuoshimc”：”措施名称”, “guijiriqi”：”轨迹时间 2015-02-02 11:22:20”, “tiaoxingma”：”条形码”, “lururen”：”录入人id”, “lururenxm”：”录入人姓名”, “wpbgyid”：”物品保管员id”, “wpbgyxm”：”物品保管员姓名”, “bgsid”：” 保管室id”, “bgdw”：”保管单位”, “bgdwid”：”保管单位id”, “bgcs”：”保管场所”, “bgcsid”：”保管场所id”, “yjdw”：”移交单位”, “yjdwid”：”移交单位id”, “bgsmc”：” 保管室名称”,  “ck”：”仓库”, “ccs”：”储藏室”, “hw”：” 货位”  }]示例：[{\"id\":\"417D3C8CFF804891939A1EB717BE785B\",\"actflag\":\"2\",\"actuser\":\"测试人员\",\"wupinbianhao\":\"P1302001300002017080006\",\"cuoshi\":\"1\",\"cuoshimc\":\"入库完成\",\"guijiriqi\":\"2015-02-02 11:22:20\",\"tiaoxingma\":\"130200130000201708000613\",\"lururen\":\"200111666666\",\"lururenxm\":\"张三\",\"wpbgyid\":\"200111666666\",\"wpbgyxm\":\"李四\",\"bgsid\":\"123123131\",\"bgsmc\":\"丰南派出所第一保管室\",\"ck\":\"xx\",\"ccs\":\"xx\",\"hw\":\"xx\"}]",
+        "operationId": "updateOrAddWpgj",
+        "parameters": [
+          {
+            "name": "data",
+            "in": "formData",
+            "description": "涉案财物回写物品轨迹信息（json）",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/sacw/updateOrAddCkxx": {
+      "post": {
+        "tags": [
+          "涉案财物接口"
+        ],
+        "summary": "回写物品处置明细",
+        "description": "\n\nid '主键'</br>\nassessmentorg '评估机构'</br>\nassessmentdate '评估时间'</br>\nassessmentaddress '评估地点'</br>\nassessmentgoodname '评估物品名称'</br>\nassessmentmoney '评估价值'</br>\nassessmentpeople '评估时当事人是否到场'</br>\nauctiondate  '(拍卖/变卖/出售/变现)日期'</br>\nauctionliveprice '(拍卖/变卖)留守价'</br>\nauctionprice '(拍卖/变卖/出售/变现)成交价'</br>\nauctionorg '(拍卖/变卖/出售/变现)机构'</br>\nauctionpeople '(拍卖/变卖)时当事人是否到场'</br>\nisnobottomprice '是否无底价拍卖'</br>\nsavecode'（存入/缴存）账户'</br>\nsavedate '存入日期'</br>\nsaveuser '存入人'</br>\ncodedepartment '账户单位'</br>\nsavebank '存款银行'</br>\nregularorcurrent '定（活）期'</br>\nexaminedate '审前返还日期'</br>\nexamineuser '审前返还对象'</br>\nmanagementuser '(处置人/返还处置人)'</br>\nmanagementremark '(审前返还原因/返还原因/退回)'</br>\nmanagementdate '处置日期'</br>\nmanagemedepart '处置单位'</br>\nrefereeremark '裁判说明'</br>\ninvolvedprice '涉案钱款'</br>\nsumprice '总钱款'</br>\nbankvouchercode '银行凭证号'</br>\npaiddate'(销毁/上缴/退回)日期'</br>\ndoingpeople '(办案/销毁/退回)人员'</br>\nbillcode '交款单据凭证号'</br>\nreturncurrentusername '返还当事人姓名'</br>\nreturncurrentidentity '返还当事人身份证号码'</br>\nisclaim '是否认领'</br>\nclaimdate '认领日期'</br>\ndelegateusername '委托接收人姓名'</br>\ndelegateusercode '委托接收人身份证号'</br>\ndelegateandcurrentrelationship '委托接收人与当事人关系'</br>\nsaveaddress  '保存地点'</br>\nreceiveuser '接收人'</br>\nreceivedepartment '接受单位'</br>\ngoodid '物品外键'</br>\ngoodoutdetailisid '出库单明细Id'</br>gujiid 物品轨迹ID\ncktype '出库类型'</br>\nwupinbianhao '物品编号'</br>actflag 操作标识\n\n",
+        "operationId": "updateOrAddCkxx",
+        "parameters": [
+          {
+            "name": "data",
+            "in": "formData",
+            "description": "回写物品处置明细（json）",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/sacw/getCrkAjCount": {
+      "post": {
+        "tags": [
+          "涉案财物接口"
+        ],
+        "summary": "查询当前年份的所有案件数量，已入库的是多少，未入库的，按照（省，市，分局）",
+        "description": "1.datas\t案件数据\tList</br>\n2.success\t返回结果状态，true：成功，false：失败\tInteger</br>\n3.msg\t返回异常信息\tString</br>1.id\t办案单位id\tString</br>\n2.mingcheng\t单位名称\tString</br>\n3.drkaj\t待入库案件数量\tString</br>\n4.yrkaj\t已入库案件数量\tString</br>\n接口返回为市、分局统计结果。",
+        "operationId": "getCrkAjCount",
+        "parameters": [
+          {
+            "name": "gonganid",
+            "in": "formData",
+            "description": "6位公安id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "startDate",
+            "in": "formData",
+            "description": "开始时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "in": "formData",
+            "description": "结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/sacw/getWrkWpsCountByGonganid": {
+      "post": {
+        "tags": [
+          "涉案财物接口"
+        ],
+        "summary": "按公安id 查询 部门 待入库状态的物品数量",
+        "description": "1.datas\t案件数据\tList</br>\n2.success\t返回结果状态，true：成功，false：失败\tInteger</br>\n3.msg\t返回异常信息\tString</br>1.anjianbianhao 案件编号</br>2.wupinbianhao 物品编号</br>",
+        "operationId": "getWrkWpsCountByGonganid",
+        "parameters": [
+          {
+            "name": "gonganid",
+            "in": "formData",
+            "description": "公安ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "cuoshiStart",
+            "in": "formData",
+            "description": "开始时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "cuoshiEnd",
+            "in": "formData",
+            "description": "结束时间yyyy-MM-dd HH:mm:ss格式",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/sacw/getDepartmentListSacw": {
+      "get": {
+        "tags": [
+          "涉案财物接口"
+        ],
+        "summary": "获取办案单位",
+        "description": "1.datas\t案件数据\tList</br>\n2.success\t返回结果状态，true：成功，false：失败\tInteger</br>\n3.msg\t返回异常信息\tString</br>\n1.id\t办案单位id\tString</br>\n2.mingcheng\t单位名称\tString</br>\n3.quancheng\t隶属全称\tString</br>\n4.gonganid\t组织机构编号\tString</br>\n5.actflag\t数据标志（actflag=1新增2修改4删除）\tString</br>6.jiancheng 简称",
+        "operationId": "getDepartmentListSacw",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/sacw/updateOrAddWpgjYsp": {
+      "post": {
+        "tags": [
+          "涉案财物接口"
+        ],
+        "summary": "涉案财物回写物品轨迹音视频资料信息",
+        "description": "[{ \"id\": \"物品轨迹相关音视频id\", \"leibie\": \"0 表示图片资料 1表示视频资料\",   actflag\": \"操作表示 1 表示插入数据 2表示 更新数据 4表示删除数据\", \"actuser\": \"操作人\" ,“yspzlmc”：”音视频资料名称”, “hxwpid”：”物品轨迹id（关联的外键）”, “zlurl”：” 资料url”, “scr”：”上传人”, “scsj”：”上传时间 2015-02-02 11:22:20”,}] 示例：[{\"id\":\"417D2C8CFF804891939A1EB717BE785B\",\"actflag\":\"2\",\"actuser\":\"测试人员\",\"yspzlmc\":\"这个是入库的视频\",\"zlurl\":\"http://10.24.1.12:8080/1.mp4\",\"scr\":\"李四\",\"scsj\":\"2015-02-02 11:22:20\",\"leibie\":\"2\",\"hxwpid\":\"417D3C8CFF804891939A1EB717BE785B\"}]",
+        "operationId": "updateOrAddWpgjYsp",
+        "parameters": [
+          {
+            "name": "data",
+            "in": "formData",
+            "description": "涉案财物回写物品轨迹音视频资料信息（json）",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/ysppt/getSpjkSbCount": {
+      "get": {
+        "tags": [
+          "音视频平台接口"
+        ],
+        "summary": "统计高清审讯设备接入情况",
+        "description": "返回结果说明：</br>1.data\t执法区域人员信息\tObject</br>\n2.flag\t返回结果状态，1：成功，0：失败\tInteger</br>\n3.error\t返回异常信息\tString</br>1.orgid\t组织机构编码\tString</br>\n2.orgName\t组织机构名称\tString</br>\n3.count\t统计总数\tInt</br>\n",
+        "operationId": "getSpjkSbCount",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/ysppt/getAjbls": {
+      "post": {
+        "tags": [
+          "音视频平台接口"
+        ],
+        "summary": "获取笔录信息",
+        "description": " 返回数据字段说明</br>ANJIANBIANHAO, 案件编号            </br>\nQISHISHIJIAN, 起始时间             </br>\nZHONGZHISHIJIAN, 终止时间           </br>\nBILUNEIRONG, 笔录内容     </br>",
+        "operationId": "getAjbls",
+        "parameters": [
+          {
+            "name": "blbh",
+            "in": "formData",
+            "description": "笔录编号",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/ysppt/getYspzlDatas": {
+      "post": {
+        "tags": [
+          "音视频平台接口"
+        ],
+        "summary": "获取涉案财物音视频资料",
+        "description": " 返回数据字段说明</br>    id 记录id,                                       </br>\n    acttime 变动时间,                                </br>\n    actflag 1表示新增记录2表示修改记录4表示删除记录, </br>\n    yspzlmc 音视频资料名称,                          </br>\n    zlurl 资料绝对路径,                              </br>\n    scr 上传人,                                      </br>\n    scsj 上传时间,                                   </br>\n    cjsj 创建时间,                                   </br>\n\tleibie 0表示图片资料1表示视频资料,               </br>\n\twupinbianhao 物品编号,                           </br>\n\tcuoshi 措施编号,                                 </br>\n\tcuoshimc 措施名称,                               </br>\n\tcuoshiriqi 措施日期,                             </br>\n\twpbgyid 保管员id,                                </br>\n\twpbgyxm 保管员姓名,                              </br>\n\tbgsid 保管室id,                                  </br>\n\tbgsmc 保管室姓名,                                </br>\n\tgonganid 公安id,                                 </br>\n\tdanweiid 办案单位id,                             </br>\n\tanjianbianhao 案件编号,                          </br>\n\tanjianmingcheng 案件名称,                        </br>\n\trenyuanbianhao 人员编号,                         </br>\n\txingming 人员姓名,                               </br>\n\tmingcheng 物品名称                               </br>hxwpid 视频和业务数据关联的外键",
+        "operationId": "getYspzlDatas",
+        "parameters": [
+          {
+            "name": "acttime",
+            "in": "formData",
+            "description": "数据变动时间,yyyy-MM-dd hh24:mi:ss 格式如2011-01-01 00:00:00",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/ysppt/getZfqyRs": {
+      "get": {
+        "tags": [
+          "音视频平台接口"
+        ],
+        "summary": "统计执法场所当前人数",
+        "description": "返回结果说明：</br>1.data\t执法区域人员信息\tObject</br>\n2.flag\t返回结果状态，1：成功，0：失败\tInteger</br>\n3.error\t返回异常信息\tString</br>1.orgid\t组织机构编码\tString</br>\n2.orgName\t组织机构名称\tString</br>\n3.count\t统计总数\tInt</br>\n",
+        "operationId": "getZfqyRs",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/zltb/zltbOrgList": {
+      "post": {
+        "tags": [
+          "增量数据同步接口"
+        ],
+        "summary": "获取组织机构数据",
+        "description": "返回结果类型说明:</br>1.datas\t案件数据\tList</br>\n2.success\t返回结果状态，true：成功，false：失败\tInteger</br>\n3.msg\t返回异常信息\tString</br>\n1.id\t组织机构id\tString</br>\n2.mingcheng\t组织机构名称\tString</br>\n3.parentId\t组织机构上下级\tString</br>\n4.actflag\t数据标志（actflag=1新增2修改4删除）</br>5.jiancheng 简称</br>",
+        "operationId": "zltbOrgList",
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "formData",
+            "description": "数据变更的开始时间",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "in": "formData",
+            "description": "数据变更的结束时间",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/zltb/zltbDepartmentList": {
+      "post": {
+        "tags": [
+          "增量数据同步接口"
+        ],
+        "summary": "获取办案单位",
+        "description": "1.datas\t案件数据\tList</br>\n2.success\t返回结果状态，true：成功，false：失败\tInteger</br>\n3.msg\t返回异常信息\tString</br>\n1.id\t办案单位id\tString</br>\n2.mingcheng\t单位名称\tString</br>\n3.quancheng\t隶属全称\tString</br>\n4.gonganid\t组织机构编号\tString</br>\n5.actflag\t数据标志（actflag=1新增2修改4删除）\tString</br>6.jiancheng 简称",
+        "operationId": "zltbDepartmentList",
+        "parameters": [
+          {
+            "name": "gonganid",
+            "in": "formData",
+            "description": "公安id",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "startDate",
+            "in": "formData",
+            "description": "数据变更的开始时间",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "in": "formData",
+            "description": "数据变更的结束时间",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
         }
       }
     }
-  },
-  "externalDocs": {
-    "description": "Find out more about Swagger",
-    "url": "http://swagger.io"
   }
 }

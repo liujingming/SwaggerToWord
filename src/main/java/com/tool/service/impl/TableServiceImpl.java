@@ -122,11 +122,13 @@ public class TableServiceImpl implements TableService {
                 if (requestType.contains("post")) {
                     Map<String, Object> strMap = otherRequestParam(requestList);
                     requestParam = strMap.toString();
-                    responseParam = HttpClientUtil.post(host + request, null, strMap, null, "utf-8");
+//                    responseParam = HttpClientUtil.post(host + request, null, strMap, null, "utf-8");
+                    responseParam = String.valueOf(getValue.get("description"));
                 } else if (requestType.contains("get")) {
                     String s = getRequestParam(requestList);
                     requestParam = s;
-                    responseParam = HttpClientUtil.get(host + request + s, null, null, "utf-8");
+//                    responseParam = HttpClientUtil.get(host + request + s, null, null, "utf-8");
+                    responseParam = String.valueOf(getValue.get("description"));
                 }
 
                 //封装Table
