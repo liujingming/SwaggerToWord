@@ -139,9 +139,22 @@ public class TableServiceImpl implements TableService {
                 table.setResponseForm(StringUtils.removeEnd(responseForm, "、"));
                 table.setRequestType(StringUtils.removeEnd(requestType, "、"));
                 table.setRequestList(requestList);
-                table.setResponseList(responseList);
+                Request tmprequest = null;
                 table.setRequestParam(requestParam);
                 table.setResponseParam(responseParam);
+                table.setResponseList(responseList);
+                if(requestList.size()>0){
+                    tmprequest = requestList.get(0);
+                }
+                if(!Objects.isNull(tmprequest)){
+                    if(tmprequest.getName().equalsIgnoreCase("data")){
+                        table.setRequestParam(requestParam+responseParam.split("@@@@")[0]);
+                        table.setResponseParam(responseParam.split("@@@@")[1]);
+                    }
+                }
+
+
+
                 list.add(table);
             }
         }
